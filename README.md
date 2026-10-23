@@ -15,13 +15,29 @@ All planning and architecture documents are available inside the docs folder.
 - Node.js LTS
 - Git
 
-## How to Run
-## Client
+### Client
 
-Run frontend:
+### Install
 
+```bash
 cd client
-
 npm install
+```
 
+### Development
+
+```bash
 npm run dev
+```
+
+### Production Build
+
+```bash
+npm run build
+```
+
+### Type Check
+
+```bash
+npm run type-check
+```
