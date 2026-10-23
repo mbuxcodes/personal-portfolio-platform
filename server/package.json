@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server for the personal portfolio platform",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+  "dev": "nodemon --exec tsx src/index.ts",
+  "build": "tsc",
+  "start": "node dist/index.js",
+  "type-check": "tsc --noEmit"
+},
+  "keywords": [],
+  "author": "Muhammad Bux Brohi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "nodemon": "^3.1.14",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
