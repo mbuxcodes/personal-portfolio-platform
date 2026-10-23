@@ -16,5 +16,12 @@ All planning and architecture documents are available inside the docs folder.
 - Git
 
 ## How to Run
+## Client
 
-Coming soon.
+Run frontend:
+
+cd client
+
+npm install
+
+npm run dev
