@@ -12,13 +12,13 @@ body (optional)
 footer (optional)
 ```
 
-| Part | Rule |
-| --- | --- |
-| **type** | `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `ci`, `security` |
-| **scope** | `client`, `server`, `repo`, or omitted when a change spans both |
+| Part        | Rule                                                                                     |
+| ----------- | ---------------------------------------------------------------------------------------- |
+| **type**    | `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `chore`, `ci`, `security`             |
+| **scope**   | `client`, `server`, `repo`, or omitted when a change spans both                          |
 | **summary** | Imperative, lower case, under about 72 characters. A milestone commit ends with `(Mx.y)` |
-| **body** | Why the change was made and any trade-off, where not obvious |
-| **footer** | References to decisions or documents, for example `Refs: TD-016` |
+| **body**    | Why the change was made and any trade-off, where not obvious                             |
+| **footer**  | References to decisions or documents, for example `Refs: TD-016`                         |
 
 Example: `feat(server): sign-in with attempt limiting (M5.2)`
 
@@ -36,3 +36,16 @@ Example: `feat(server): sign-in with attempt limiting (M5.2)`
 - The code, tests, and documentation for that milestone, and nothing else.
 - No unrelated formatting or refactoring.
 - No secrets, personal data, or generated files.
+
+## Local checks and the commit message check
+
+Two local hooks run through Husky:
+
+| Hook         | What it does                                                                                                                                                                            |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pre-commit` | Formats the staged files with Prettier, then lints the staged code with the ESLint configuration of its own area. A lint error, including a layer-boundary violation, blocks the commit |
+| `pre-push`   | Runs the type check in both areas                                                                                                                                                       |
+
+The hooks are local only. Continuous integration is Milestone 6.1.
+
+A check that validates the commit message format is optional in the roadmap, and none is installed. The format above is verified when the pull request is reviewed. If the check is wanted later, add commitlint with the conventional configuration and a `.husky/commit-msg` hook, and record the dependency in `TECHNICAL_DECISIONS.md` (TD-038).

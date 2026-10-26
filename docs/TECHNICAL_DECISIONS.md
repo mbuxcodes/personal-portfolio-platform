@@ -8,7 +8,7 @@
 | **Version** | 1.0.0 |
 | **Status** | Draft — Pending Review |
 | **Author** | Muhammad Bux |
-| **Last Updated** | 2026-10-20 |
+| **Last Updated** | 2026-10-26 |
 | **Current Phase** | Stage 2 — Design: Technical Decisions (final document of Stage 2) |
 | **Depends On** | `PROBLEM_STATEMENT.md`, `VISION.md`, `SCOPE.md`, `FUNCTIONAL_REQUIREMENTS.md`, `USER_FLOWS.md`, `DATABASE_DESIGN.md`, `API_DESIGN.md`, `ARCHITECTURE_DESIGN.md` |
 
@@ -130,7 +130,8 @@ This document names libraries where a choice is needed. These reflect the ecosys
 | TD-045 | Browser support policy | Accepted |
 | TD-046 | Configuration management | Accepted |
 | TD-047 | Process lifecycle and graceful shutdown | Accepted |
-| TD-048 | Testing tools | Deferred |
+| TD-048 | Testing tools | Accepted |
+| TD-049 | Project layout, module template, aliases, and boundary rules | Accepted |
 
 ---
 
@@ -662,6 +663,61 @@ This document names libraries where a choice is needed. These reflect the ecosys
 | **Trade-offs** | Slower installs than some alternatives. Dependency hoisting is looser |
 | **Long-Term Impact** | Policy for new dependencies: it must meet a stated requirement, be widely used and maintained, and not replace a few lines of code. Each addition is noted in this document |
 
+##### Dependency and setup log (TD-038)
+
+Each package is recorded here when it is first installed. Versions were verified against the npm registry on **2026-10-26**, and each area was installed from its lockfile, linted, type checked, tested, built, and run on **Node 24.22.1** (the line pinned by `.nvmrc`).
+
+**Repository tooling (M1.4)**
+
+| Package | Version | Reason |
+| --- | --- | --- |
+| `prettier` | 3.9.10 | Formatting for the whole repository (TD-039) |
+| `husky` | 9.1.7 | Runs the pre-commit and pre-push hooks |
+| `lint-staged` | 17.6.0 | Formats and lints only the staged files |
+
+**Client**
+
+| Package | Version | Milestone | Reason |
+| --- | --- | --- | --- |
+| `react`, `react-dom` | 19.3.1 | M1.2 | The approved UI library (TD-002) |
+| `vite` | 8.3.5 | M1.2 | The approved build tool |
+| `@vitejs/plugin-react` | 6.1.2 | M1.2 | React support in Vite |
+| `typescript` | 6.0.3 | M1.2 | Strict type checking. The newest version typescript-eslint supports |
+| `@types/react`, `@types/react-dom` | 19.3.0 | M1.2 | Types for React |
+| `@types/node` | 24.19.2 | M1.2 | Types for `vite.config.ts`. Matches the pinned Node line |
+| `eslint`, `@eslint/js` | 10.13.0, 10.0.1 | M1.4 | Linting. ESLint 9 is no longer supported, so version 10 is used |
+| `typescript-eslint` | 8.72.0 | M1.4 | TypeScript lint rules |
+| `eslint-plugin-jsx-a11y` | 6.10.2 | M1.4 | Accessibility rules (FR-A11Y). Its published ESLint peer range stops at 9, so `overrides` in `client/package.json` accepts ESLint 10. Rule detection was proven on ESLint 10 |
+| `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh` | 7.1.1, 0.5.7 | M1.4 | React rules from the Vite template, kept because they catch real defects |
+| `globals` | 17.13.0 | M1.4 | Browser globals for lint |
+| `eslint-plugin-boundaries` | 7.3.0 | M1.5 | Layer and feature dependency rules (TD-049) |
+| `eslint-import-resolver-typescript` | 4.4.5 | M1.5 | Lets the boundary rules resolve `@/` imports |
+| `vitest`, `@vitest/coverage-v8` | 5.0.5 | M1.4 | Test runner and coverage (TD-048) |
+| `jsdom` | 30.1.3 | M1.4 | Browser environment for component tests |
+| `@testing-library/react`, `@testing-library/jest-dom` | 16.3.3, 7.0.1 | M1.4 | Component tests and matchers |
+| `jest-axe`, `@types/jest-axe` | 11.0.0, 3.5.9 | M1.4 | Accessibility assertions. jest-axe publishes no types of its own |
+
+**Server**
+
+| Package | Version | Milestone | Reason |
+| --- | --- | --- | --- |
+| `express` | 5.3.0 | M1.3 | The approved HTTP framework, current major (TD-012) |
+| `@types/express` | 5.0.6 | M1.3 | Types for Express |
+| `typescript` | 6.0.3 | M1.3 | Compiles the server to `dist/`. Same version as the client |
+| `tsx` | 4.23.15 | M1.3 | Runs TypeScript directly in development |
+| `nodemon` | 3.1.14 | M1.3 | Restarts the server when source files change |
+| `@types/node` | 24.19.2 | M1.3 | Types for Node. Matches the pinned Node line |
+| `eslint`, `@eslint/js`, `typescript-eslint`, `globals` | as client | M1.4 | Linting with TypeScript rules |
+| `eslint-plugin-boundaries`, `eslint-import-resolver-typescript` | as client | M1.5 | Server layer rules (TD-049) |
+| `vitest`, `@vitest/coverage-v8` | 5.0.5 | M1.4 | Test runner and coverage (TD-048) |
+
+**Records and notes**
+
+- **Server module system:** ES modules (`"type": "module"`, TypeScript `module` and `moduleResolution` set to `NodeNext`). Relative imports in source include the `.js` extension, and the compiled server starts with `node dist/index.js`. The `#` aliases resolve to `src` through the `source` condition in development and tests, and to `dist` at runtime.
+- **Node version:** both areas and the repository root declare `"engines": { "node": ">=24 <25" }`, matching `.nvmrc` (TD-011). The pin moves forward when the owner decides to adopt the next Active LTS line, and `.nvmrc`, the three `engines` fields, and both `@types/node` ranges change together.
+- **Deferred installs:** Supertest and Playwright are chosen in TD-048 and installed when first needed. `@testing-library/user-event` is installed with the first interaction test.
+- **Versions behind the latest major:** none known at the verification date. TypeScript 7 exists but typescript-eslint 8.72 supports TypeScript below 6.1, so both areas stay on 6.0.
+
 #### TD-039 — Code quality tooling
 
 | Field | Detail |
@@ -797,14 +853,27 @@ This document names libraries where a choice is needed. These reflect the ecosys
 
 | Field | Detail |
 | --- | --- |
-| **Decision** | Deferred to the Delivery phase |
-| **Context** | `ARCHITECTURE_DESIGN.md` Section 23 assigns testing implementation and tools to Delivery. The brief for this document excludes testing implementation |
-| **Alternatives Considered** | Choosing tools now |
-| **Selected Option** | None here. The architecture's testability requirements stand: layers testable alone, external services behind gateways, and contract conformance checks at the API boundary |
-| **Reason for Selection** | Test tooling is best chosen together with the delivery workflow |
-| **Why Alternatives Were Rejected** | Choosing now would pre-empt a phase |
-| **Trade-offs** | Delays certainty about test tools |
-| **Long-Term Impact** | Decisions to be recorded here when made |
+| **Decision** | Use Vitest as the test runner in both areas. Use Testing Library with jest-dom and jest-axe for client components, including accessibility checks. Use Supertest for server HTTP tests and Playwright for end-to-end tests. Vitest, Testing Library, jest-dom, and jest-axe are installed now. Supertest and Playwright are installed by the milestone that first needs them |
+| **Context** | `ARCHITECTURE_DESIGN.md` Section 23 left testing tools open, and Milestone 1.4 requires a runner before the first rule exists to test. The architecture's testability requirements stand: layers testable alone, external services behind gateways, and contract conformance checks at the API boundary. FR-A11Y applies to every component |
+| **Alternatives Considered** | Jest and Mocha as runners. Cypress for end-to-end tests. Vitest browser mode. vitest-axe instead of jest-axe |
+| **Selected Option** | Vitest 5 in both areas, with the jsdom environment on the client and the node environment on the server. Testing Library for React with jest-dom matchers. jest-axe with its published types, calling axe directly and asserting an empty violation list. Supertest for the server. Playwright for end-to-end work |
+| **Reason for Selection** | Vitest shares Vite's configuration and transforms, so the client needs no second build setup, and it runs TypeScript and ES modules without extra configuration on the server. Testing Library tests behavior the way a visitor sees it. jest-axe wraps the axe engine and is maintained. Supertest tests the HTTP layer without opening a port. Playwright covers the full path through a real browser. Maintenance was checked on 2026-10-26 from the npm registry: Vitest 5.0.5 (published 2026-10-19), Testing Library React 16.3.3 (2026-08-27), jest-dom 7.0.1 (2026-08-09), jest-axe 11.0.0 (2026-07-26), Supertest 7.3.1 (2026-10-02), Playwright 1.64.1 (2026-10-25) |
+| **Why Alternatives Were Rejected** | Jest needs extra transform setup for a Vite and ES module project. Mocha needs separate assertion and mocking libraries. Cypress overlaps Playwright. vitest-axe has not been published since 2025-01 and is at version 0.1 |
+| **Trade-offs** | Vitest globals are enabled on the client because Testing Library's automatic cleanup needs them, and disabled on the server, where tests import what they use. Coverage uses the V8 provider, which is fast but less precise on branches than instrumentation. jsdom does not compute layout, so contrast and layout checks need Playwright |
+| **Long-Term Impact** | Tests sit beside the code they test (TD-049). Each area has one smoke test that proves the runner works, to be removed when real tests exist. Continuous integration, which would run the same commands, is Milestone 6.1. Test strategy and coverage targets belong to the Delivery phase |
+
+#### TD-049 — Project layout, module template, aliases, and boundary rules
+
+| Field | Detail |
+| --- | --- |
+| **Decision** | Fix the concrete layout of both areas as below, enforce the dependency rules of `ARCHITECTURE_DESIGN.md` Sections 6.1 and 7.4 with lint, and name files in kebab-case. Folders are created only when they have content. The layout changes only by updating this entry and the lint rules together |
+| **Context** | The architecture defines layers and rules but not folders (Sections 6.2 and 23, document update G-D1). TD-020 requires feature slices that mirror the server's modules. TD-039 requires the layer rules to be enforced |
+| **Alternatives Considered** | Server folders by layer (all controllers together). Client folders by technical type. A lint-free convention enforced by review. Server path aliases through a compile-time rewriting tool |
+| **Selected Option** | **Client** (`client/src`): `app/` (application shell), `routing/`, `layouts/`, `features/<public or admin>/<feature>/`, `shared-ui/`, `data-access/`, `state/`, `utils/`, `config/`, and `test/` (test setup and helpers only). `main.tsx` is the entry file. **Server** (`server/src`): `modules/<module>/`, `middleware/`, `gateways/` (the media gateway is `gateways/media/`), `utils/`, and `config/`, with `index.ts` as the entry file. **Module template, server**: each entity module `<name>` holds `<name>.routes.ts`, `<name>.controller.ts`, `<name>.service.ts`, `<name>.repository.ts`, `<name>.model.ts`, `<name>.mappers.ts` (public and admin response mappers, where both exist), and `<name>.schema.ts` (request validation). **Module template, client**: each feature holds `pages/`, `components/`, `forms/` (form definitions and input rules), `api/` (its data-access definitions), `types.ts`, and an `index.ts` that exports what routing needs. A feature adds only the parts it has. **Tests** sit beside the code as `<file>.test.ts` or `<file>.test.tsx`. **Aliases**: the client uses `@/` for `client/src/`, for example `@/shared-ui/button`. The server uses Node subpath imports, for example `#utils/greet` and `#modules/projects/projects.service`. **Boundary rules**: the client rules are the dependency table in Section 6.1, with each layer allowed only what the table lists, and a feature allowed to import only its own folder. The server rules are Section 7.4: routes reach controllers only, controllers reach services only, services reach their own module's repository and other modules' services, only repositories reach models, repositories reach only their own module's model, and only `gateways/media` may import the media SDK. **Environment templates**: `client/.env.example` and `server/.env.example`, names only |
+| **Reason for Selection** | Feature and module folders keep everything for one area together and give the same names on both sides (TD-020). A suffix on each server file shows its layer in any file list and lets lint classify it. A kebab-case name avoids case-only differences between operating systems with case-insensitive files and the case-sensitive servers they deploy to, and satisfies TD Section 6, which asks for one file naming style. Aliases make the layer visible in every import and remove long relative paths. Node subpath imports are resolved by Node itself, by the compiler, by the development runner, and by Vitest, so compiled output needs no rewriting step and no extra package. Lint rules turn the written dependency rules into automatic checks, and each rule was proven by a deliberate violation that failed lint |
+| **Why Alternatives Were Rejected** | Layer folders split one entity across many places and break the module template. Type-based client folders were rejected in TD-020. Review alone depends on memory. A rewriting tool adds a dependency and a build step for a problem Node already solves |
+| **Trade-offs** | The suffix convention must be followed for lint to classify a file, and an unclassified file is not checked. The server alias map needs the `source` condition in the compiler, the development runner, and the test runner. Lint enforces boundaries between files and layers, not their contents. The boundary plugin is a young major version, so its configuration is pinned and re-verified when it is upgraded |
+| **Long-Term Impact** | New features and modules follow the templates without new decisions. The client's `@/` alias and the server's `#` imports are the only alias forms. If a shared area between client and server is ever needed, this entry and ADR-21 change together |
 
 ---
 
@@ -1060,7 +1129,7 @@ The following decisions may be revisited. Each has an explicit trigger so that a
 | **Animation library** (TD-010) | Bundle weight or use does not justify it | Replace with CSS transitions |
 | **Accessible primitives library** (TD-025) | Maintenance concerns | Switch to the listed substitute inside shared UI |
 | **Package manager** (TD-038) | Workspaces or shared packages are introduced | Move to a workspace-capable setup |
-| **Testing tools** (TD-048) | The Delivery phase begins | Decide and record here |
+| **Testing tools** (TD-048) | A chosen tool is no longer maintained, or the Delivery phase sets a test strategy | Re-verify maintenance and record the change here |
 
 ---
 
@@ -1188,7 +1257,7 @@ This document does not define:
 | Configuration files | Implementation |
 | Container, deployment, and hosting setup, and the choice of hosting vendor | Delivery phase |
 | CI/CD | Delivery phase |
-| Testing implementation and test tools | Delivery phase (TD-048) |
+| Test strategy and coverage targets (tools are chosen in TD-048) | Delivery phase |
 | Visual design, wireframes, and the choice of fonts and colors | Design work |
 | New features | Not permitted. Handled through the Scope Change Policy |
 
@@ -1212,9 +1281,9 @@ No earlier decision was changed, and no feature was added or removed. The items 
 
 | # | Matter | Handling |
 | --- | --- | --- |
-| C-1 | **Hosting platform.** `ARCHITECTURE_DESIGN.md` Section 23 assigns "hosting platform choice" to the Delivery phase, while Sections 4.4 and 24 assign it to Technical Decisions. The brief for this document excludes deployment | This document records the requirements and the platform class (TD-040), and leaves the vendor and scripts to Delivery. **Update `ARCHITECTURE_DESIGN.md` Sections 4.4 and 24 to say vendor choice is a Delivery matter** |
-| C-2 | **Folder layout.** `ARCHITECTURE_DESIGN.md` Section 23 assigns it to Technical Decisions, while the brief for this document excludes folder implementation | Principles only here (TD-020, Section 6). The concrete layout is implementation planning. **Update `ARCHITECTURE_DESIGN.md` Section 23** |
-| C-3 | **Testing tools.** `ARCHITECTURE_DESIGN.md` Section 23 assigns them to Delivery | Deferred (TD-048). Consistent |
+| C-1 | **Hosting platform.** `ARCHITECTURE_DESIGN.md` Section 23 assigns "hosting platform choice" to the Delivery phase, while Sections 4.4 and 24 assign it to Technical Decisions. The brief for this document excludes deployment | This document records the requirements and the platform class (TD-040), and leaves the vendor and scripts to Delivery. `ARCHITECTURE_DESIGN.md` Sections 4.4 and 24 now say vendor choice is a Delivery matter (applied in Milestone 1.5, document update G-D1) |
+| C-2 | **Folder layout.** `ARCHITECTURE_DESIGN.md` Section 23 assigns it to Technical Decisions, while the brief for this document excludes folder implementation | Principles only here (TD-020, Section 6). The concrete layout is implementation planning, recorded as TD-049. `ARCHITECTURE_DESIGN.md` Section 23 now says so (applied in Milestone 1.5, document update G-D1) |
+| C-3 | **Testing tools.** `ARCHITECTURE_DESIGN.md` Section 23 assigned them to Delivery | Chosen earlier, in Milestone 1.4 (TD-048), because the roadmap needs a runner before the first rule exists to test. Test strategy and coverage targets stay with Delivery |
 
 ### 14.2 Items needing updates to earlier documents
 

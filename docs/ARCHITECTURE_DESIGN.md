@@ -136,7 +136,7 @@ flowchart LR
 | --- | --- |
 | MongoDB Atlas | Hosted storage for all entities |
 | Cloudinary | Image storage and delivery |
-| Deployment platform | Must run one server application that serves both the client files and the API on one site (Technical Decisions) |
+| Deployment platform | Must run one server application that serves both the client files and the API on one site. The requirements and platform class are in Technical Decisions. The vendor choice belongs to the Delivery phase |
 | Domain name | The single site address |
 | **Email service** | **Not used.** With no notifications (`FUNCTIONAL_REQUIREMENTS.md` D-1) and replies sent from the Admin's own email, no architectural component sends email. See Section 26, A-15 |
 
@@ -1158,7 +1158,7 @@ This document does not define:
 | Source code of any kind | Implementation |
 | Database schema and model definitions | `DATABASE_DESIGN.md` and implementation |
 | API implementation | Implementation, per `API_DESIGN.md` |
-| Folder and file layout | Technical Decisions and implementation |
+| Folder and file layout | Implementation planning (Milestone 1.5), recorded as TD-049 |
 | Deployment scripts, hosting platform choice, and container configuration | Delivery phase |
 | Infrastructure and its provisioning | Delivery phase |
 | CI/CD | Delivery phase |
@@ -1178,7 +1178,7 @@ The design is deliberately small. It adds nothing the approved scope does not ne
 
 During implementation, this document guides placement of code, the direction of dependencies, and where each requirement is enforced. When a question has no obvious answer, the module template, the layer rules, and the principles in Section 21 decide it. When a decision here proves wrong, the ADR table shows what was traded away, and the change is made through the contract, not around it.
 
-The next step is **Technical Decisions**, which will choose tools and values within this structure: libraries, lifetimes, the article content format, index definitions, the hosting platform, and the setup procedure. Those choices must respect the boundaries set here, and may update this document where they change it.
+The next step is **Technical Decisions**, which will choose tools and values within this structure: libraries, lifetimes, the article content format, index definitions, the hosting platform class, and the setup procedure. The hosting vendor is chosen in the Delivery phase. Those choices must respect the boundaries set here, and may update this document where they change it.
 
 ---
 

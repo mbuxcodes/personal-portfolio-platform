@@ -1,0 +1,19 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+package-lock.json
+
+# Approved planning documents are the project contract. Tooling never reformats them,
+# so a change to one is always a deliberate content change.
+docs/PROBLEM_STATEMENT.md
+docs/VISION.md
+docs/SCOPE.md
+docs/FUNCTIONAL_REQUIREMENTS.md
+docs/USER_FLOWS.md
+docs/DATABASE_DESIGN.md
+docs/API_DESIGN.md
+docs/ARCHITECTURE_DESIGN.md
+docs/TECHNICAL_DECISIONS.md
+docs/IMPLEMENTATION_ROADMAP.md

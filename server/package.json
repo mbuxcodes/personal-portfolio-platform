@@ -1,26 +1,49 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "private": true,
   "description": "Server for the personal portfolio platform",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-  "dev": "nodemon --exec tsx src/index.ts",
-  "build": "tsc",
-  "start": "node dist/index.js",
-  "type-check": "tsc --noEmit"
-},
-  "keywords": [],
   "author": "Muhammad Bux Brohi",
-  "license": "ISC",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "imports": {
+    "#*": {
+      "source": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
+  },
+  "scripts": {
+    "dev": "nodemon --exec \"tsx --conditions=source\" src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write --ignore-path ../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../.prettierignore",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
   "dependencies": {
     "express": "^5.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.6",
-    "@types/node": "^26.6.5",
+    "@types/node": "^24.19.2",
+    "@vitest/coverage-v8": "^5.0.5",
+    "eslint": "^10.13.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-boundaries": "^7.3.0",
+    "globals": "^17.13.0",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.15",
-    "typescript": "^7.0.2"
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
   }
 }

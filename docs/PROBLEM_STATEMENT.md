@@ -2,14 +2,14 @@
 
 ## 1. Document Information
 
-| Field | Value |
-| --- | --- |
-| **Title** | Problem Statement — Personal Portfolio Platform |
-| **Version** | 1.0.0 |
-| **Status** | Draft — Pending Review |
-| **Author** | Muhammad Bux |
-| **Last Updated** | 2026-10-19 |
-| **Current Phase** | Phase 1 — Problem Definition (Stage 1: Think) |
+| Field             | Value                                           |
+| ----------------- | ----------------------------------------------- |
+| **Title**         | Problem Statement — Personal Portfolio Platform |
+| **Version**       | 1.0.0                                           |
+| **Status**        | Draft — Pending Review                          |
+| **Author**        | Muhammad Bux                                    |
+| **Last Updated**  | 2026-10-19                                      |
+| **Current Phase** | Phase 1 — Problem Definition (Stage 1: Think)   |
 
 ---
 
@@ -45,14 +45,14 @@ Traditional portfolios tend to fail for predictable reasons:
 
 A tutorial portfolio is built to be completed. A production portfolio is built to be operated.
 
-| Aspect | Tutorial Portfolio | Production Portfolio |
-| --- | --- | --- |
-| Purpose | Demonstrate that a technology was learned | Demonstrate that software can be delivered and sustained |
-| Content updates | Edit code and redeploy | Managed by the owner without code changes |
-| Planning | Little or none | Documented before development |
-| Quality attention | Visual result | Security, reliability, maintainability |
-| Lifespan | Weeks to months | Years |
-| Evidence of engineering | Implicit | Explicit and reviewable |
+| Aspect                  | Tutorial Portfolio                        | Production Portfolio                                     |
+| ----------------------- | ----------------------------------------- | -------------------------------------------------------- |
+| Purpose                 | Demonstrate that a technology was learned | Demonstrate that software can be delivered and sustained |
+| Content updates         | Edit code and redeploy                    | Managed by the owner without code changes                |
+| Planning                | Little or none                            | Documented before development                            |
+| Quality attention       | Visual result                             | Security, reliability, maintainability                   |
+| Lifespan                | Weeks to months                           | Years                                                    |
+| Evidence of engineering | Implicit                                  | Explicit and reviewable                                  |
 
 Most portfolios sit on the left side of this table. Reviewers who see the same pattern repeatedly learn little about a candidate's actual readiness for professional work.
 
@@ -108,14 +108,14 @@ This product exists to close the gap described in Section 3.3 by treating a pers
 
 ## 6. Target Users
 
-| User | Goals | Needs | Pain Points |
-| --- | --- | --- | --- |
-| **Hiring Engineer** | Judge whether the candidate can do the job technically | Evidence of real engineering work, technical decisions, and code quality signals | Portfolios show finished screenshots without technical substance; claims cannot be verified quickly |
-| **Recruiter** | Quickly decide whether to advance the candidate | Clear summary of skills, experience, education, and contact path | Inconsistent or outdated information; unclear seniority and role fit; time lost searching |
-| **Tech Lead** | Assess whether the candidate fits the team's technical standards | Insight into how the candidate structures work, handles complexity, and communicates | Difficulty distinguishing independent skill from tutorial replication |
-| **Engineering Manager** | Evaluate reliability, ownership, and growth potential | Evidence of planning, consistency, and long-term commitment | No signals about working habits, follow-through, or maturity |
-| **Freelance Client** | Find a developer who can deliver a business outcome | Relevant past work, clear services, trustworthy presentation, easy way to reach out | Technical jargon without business context; unclear availability; uncertainty about reliability |
-| **Portfolio Owner (Admin)** | Present accurate, current work and manage inquiries | Low-effort content upkeep, a single source of truth, confidence that owner-only functions are protected | Updates require code edits; content drifts out of date; limited visibility into visitor inquiries |
+| User                        | Goals                                                            | Needs                                                                                                   | Pain Points                                                                                         |
+| --------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Hiring Engineer**         | Judge whether the candidate can do the job technically           | Evidence of real engineering work, technical decisions, and code quality signals                        | Portfolios show finished screenshots without technical substance; claims cannot be verified quickly |
+| **Recruiter**               | Quickly decide whether to advance the candidate                  | Clear summary of skills, experience, education, and contact path                                        | Inconsistent or outdated information; unclear seniority and role fit; time lost searching           |
+| **Tech Lead**               | Assess whether the candidate fits the team's technical standards | Insight into how the candidate structures work, handles complexity, and communicates                    | Difficulty distinguishing independent skill from tutorial replication                               |
+| **Engineering Manager**     | Evaluate reliability, ownership, and growth potential            | Evidence of planning, consistency, and long-term commitment                                             | No signals about working habits, follow-through, or maturity                                        |
+| **Freelance Client**        | Find a developer who can deliver a business outcome              | Relevant past work, clear services, trustworthy presentation, easy way to reach out                     | Technical jargon without business context; unclear availability; uncertainty about reliability      |
+| **Portfolio Owner (Admin)** | Present accurate, current work and manage inquiries              | Low-effort content upkeep, a single source of truth, confidence that owner-only functions are protected | Updates require code edits; content drifts out of date; limited visibility into visitor inquiries   |
 
 ---
 
@@ -170,14 +170,14 @@ This section describes problems only. Features are deliberately excluded.
 
 Each approach below is legitimate and suits certain situations. The limitations listed concern the specific problems in Section 4 and are not general criticisms.
 
-| Approach | Strengths | Limitations Relative to This Problem |
-| --- | --- | --- |
-| **Static HTML/CSS/JS portfolio** | Simple, fast, inexpensive to host, easy to understand | Content is embedded in markup; updates require manual edits and redeployment; scales poorly as content grows; demonstrates limited engineering breadth |
-| **React-only (front-end) portfolio** | Component reuse, modern tooling, good interactivity | Content typically lives in source files; no owner-facing way to manage it; no persistent handling of visitor interaction; shows front-end skill but little else |
-| **Template or theme portfolio** | Fast to launch, visually polished, low effort | Visual and structural similarity to many other portfolios; limited personalization; little evidence of the owner's own engineering |
-| **GitHub Pages portfolio** | Free, integrated with source control, simple publishing | Constrained to static content; no dynamic capabilities; updates still flow through the repository |
-| **Website builders and hosted profile services** | Minimal technical effort, built-in content editing | Limited control and differentiation; the owner demonstrates tool use rather than engineering ability; dependence on a third party |
-| **Headless CMS with a custom front end** | Separates content from presentation; strong editing experience | Relies on a third-party content service, so the owner does not show how such a system is designed and secured; adds external cost and dependency |
+| Approach                                         | Strengths                                                      | Limitations Relative to This Problem                                                                                                                            |
+| ------------------------------------------------ | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Static HTML/CSS/JS portfolio**                 | Simple, fast, inexpensive to host, easy to understand          | Content is embedded in markup; updates require manual edits and redeployment; scales poorly as content grows; demonstrates limited engineering breadth          |
+| **React-only (front-end) portfolio**             | Component reuse, modern tooling, good interactivity            | Content typically lives in source files; no owner-facing way to manage it; no persistent handling of visitor interaction; shows front-end skill but little else |
+| **Template or theme portfolio**                  | Fast to launch, visually polished, low effort                  | Visual and structural similarity to many other portfolios; limited personalization; little evidence of the owner's own engineering                              |
+| **GitHub Pages portfolio**                       | Free, integrated with source control, simple publishing        | Constrained to static content; no dynamic capabilities; updates still flow through the repository                                                               |
+| **Website builders and hosted profile services** | Minimal technical effort, built-in content editing             | Limited control and differentiation; the owner demonstrates tool use rather than engineering ability; dependence on a third party                               |
+| **Headless CMS with a custom front end**         | Separates content from presentation; strong editing experience | Relies on a third-party content service, so the owner does not show how such a system is designed and secured; adds external cost and dependency                |
 
 **Observation.** Every approach above addresses some part of presentation or editing convenience. None simultaneously provides owner-managed content, visible engineering depth, and a documented production process, which is the combination this problem calls for.
 
@@ -200,13 +200,13 @@ The solution is intended to be extended over time as the owner's career and cont
 
 ## 10. Business Value
 
-| Area | Value Created |
-| --- | --- |
-| **Job search** | Reduces reviewer effort and increases the quality of evidence available to them. A current, credible portfolio supports screening decisions and gives interviewers concrete material to discuss. |
-| **Personal branding** | Provides one consistent, authoritative public presence that aligns with the owner's other professional channels and signals attention to detail. |
-| **Client acquisition** | Presents relevant work and a clear route to contact, helping prospective clients trust the owner and reach out with less friction. |
-| **Content management** | Makes routine updates inexpensive, which keeps content accurate and encourages the owner to document new work promptly. |
-| **Long-term maintenance** | Lowers the ongoing cost of keeping the portfolio relevant, so it remains useful across multiple career stages rather than becoming obsolete after one job search. |
+| Area                      | Value Created                                                                                                                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Job search**            | Reduces reviewer effort and increases the quality of evidence available to them. A current, credible portfolio supports screening decisions and gives interviewers concrete material to discuss. |
+| **Personal branding**     | Provides one consistent, authoritative public presence that aligns with the owner's other professional channels and signals attention to detail.                                                 |
+| **Client acquisition**    | Presents relevant work and a clear route to contact, helping prospective clients trust the owner and reach out with less friction.                                                               |
+| **Content management**    | Makes routine updates inexpensive, which keeps content accurate and encourages the owner to document new work promptly.                                                                          |
+| **Long-term maintenance** | Lowers the ongoing cost of keeping the portfolio relevant, so it remains useful across multiple career stages rather than becoming obsolete after one job search.                                |
 
 ---
 
@@ -214,17 +214,17 @@ The solution is intended to be extended over time as the owner's career and cont
 
 The project is designed to show, through its existence and its documentation, the following professional practices:
 
-| Practice | What It Demonstrates |
-| --- | --- |
-| **Production planning** | Work begins with defined problems and goals, not code. Planning documents are a reviewable artifact. |
-| **Modular thinking** | The product is composed of distinct, well-bounded areas of responsibility that can evolve independently. |
-| **Scalability** | Growth in content and features is anticipated rather than treated as an afterthought. |
-| **Maintainability** | The system is meant to be operated and changed over years, not delivered once. |
-| **Documentation discipline** | Decisions and intent are recorded and kept current, so others can understand and contribute. |
-| **Authentication and security awareness** | Protected functionality is handled with care appropriate to real applications. |
-| **API-first thinking** | Capabilities are considered as services to be consumed, not only as screens. |
-| **CMS thinking** | Content is treated as managed data with a lifecycle, separate from how it is presented. |
-| **Delivery discipline** | A deliberate staged process from problem to delivery, applied by a single developer as it would be by a team. |
+| Practice                                  | What It Demonstrates                                                                                          |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Production planning**                   | Work begins with defined problems and goals, not code. Planning documents are a reviewable artifact.          |
+| **Modular thinking**                      | The product is composed of distinct, well-bounded areas of responsibility that can evolve independently.      |
+| **Scalability**                           | Growth in content and features is anticipated rather than treated as an afterthought.                         |
+| **Maintainability**                       | The system is meant to be operated and changed over years, not delivered once.                                |
+| **Documentation discipline**              | Decisions and intent are recorded and kept current, so others can understand and contribute.                  |
+| **Authentication and security awareness** | Protected functionality is handled with care appropriate to real applications.                                |
+| **API-first thinking**                    | Capabilities are considered as services to be consumed, not only as screens.                                  |
+| **CMS thinking**                          | Content is treated as managed data with a lifecycle, separate from how it is presented.                       |
+| **Delivery discipline**                   | A deliberate staged process from problem to delivery, applied by a single developer as it would be by a team. |
 
 These items describe the engineering qualities to be demonstrated. How they are realized is determined in later phases.
 
@@ -234,33 +234,33 @@ These items describe the engineering qualities to be demonstrated. How they are 
 
 Success is evaluated against observable outcomes. Targets are initial and may be refined in later phases.
 
-| # | Criterion | Indicator |
-| --- | --- | --- |
-| SC-1 | Reviewers can evaluate the owner's experience quickly | A first-time reviewer can identify the owner's role focus, key skills, and most relevant projects within roughly two minutes |
-| SC-2 | Technical depth is visible | Each featured project communicates the problem, the owner's role, the decisions made, and the outcome |
-| SC-3 | Content is manageable without code changes | Every category of public content can be added, edited, and removed by the owner without touching source code |
-| SC-4 | Content stays current | The owner can complete a routine content update in minutes, and no public content is older than a self-defined freshness threshold |
-| SC-5 | Visitor inquiries are not lost | Every inquiry from a visitor is retained and reviewable by the owner |
-| SC-6 | Owner-only functions are protected | Management capabilities are inaccessible to anyone other than the owner |
-| SC-7 | The planning record is complete | Every development phase has a reviewed document, and no implementation begins without its preceding phase approved |
-| SC-8 | The platform is ready for expansion | New content categories or features can be proposed and scoped without rethinking the foundation |
-| SC-9 | The portfolio is credible to a technical reader | A senior engineer reviewing the project and its documentation judges it to reflect professional practice |
+| #    | Criterion                                             | Indicator                                                                                                                          |
+| ---- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| SC-1 | Reviewers can evaluate the owner's experience quickly | A first-time reviewer can identify the owner's role focus, key skills, and most relevant projects within roughly two minutes       |
+| SC-2 | Technical depth is visible                            | Each featured project communicates the problem, the owner's role, the decisions made, and the outcome                              |
+| SC-3 | Content is manageable without code changes            | Every category of public content can be added, edited, and removed by the owner without touching source code                       |
+| SC-4 | Content stays current                                 | The owner can complete a routine content update in minutes, and no public content is older than a self-defined freshness threshold |
+| SC-5 | Visitor inquiries are not lost                        | Every inquiry from a visitor is retained and reviewable by the owner                                                               |
+| SC-6 | Owner-only functions are protected                    | Management capabilities are inaccessible to anyone other than the owner                                                            |
+| SC-7 | The planning record is complete                       | Every development phase has a reviewed document, and no implementation begins without its preceding phase approved                 |
+| SC-8 | The platform is ready for expansion                   | New content categories or features can be proposed and scoped without rethinking the foundation                                    |
+| SC-9 | The portfolio is credible to a technical reader       | A senior engineer reviewing the project and its documentation judges it to reflect professional practice                           |
 
 ---
 
 ## 13. Risks
 
-| ID | Risk | Impact | Mitigation |
-| --- | --- | --- | --- |
-| R-1 | **Scope creep.** Features accumulate beyond what the problem requires. | Delays delivery; weakens focus; project may remain unfinished. | Define scope explicitly in Phase 3; require new ideas to be justified against the problem statement; defer non-essential items. |
-| R-2 | **Overengineering.** Complexity exceeds what a personal portfolio needs. | Slows progress; increases maintenance burden; may obscure rather than demonstrate good judgment. | Favor the simplest approach that satisfies a documented need; review decisions for proportionality. |
-| R-3 | **Documentation becoming outdated.** Documents diverge from reality as the project evolves. | Undermines the credibility the documentation is meant to provide. | Version documents; update them as part of any related change; review them at each phase boundary. |
-| R-4 | **Poor content quality.** Descriptions are vague, inflated, or incomplete. | A technically sound platform still fails to convince reviewers. | Establish content standards early; write project narratives with problem, role, and outcome; seek external review. |
-| R-5 | **Lack of consistency.** Visual, structural, or editorial inconsistency across the product. | Reduces professionalism and trust. | Define shared conventions before building; review work against them. |
-| R-6 | **Time constraints.** Solo development competes with job search and other commitments. | Incomplete delivery at the time the portfolio is needed. | Sequence work by value; accept incremental release; maintain a realistic schedule. |
-| R-7 | **Loss of motivation or abandonment.** Long effort with delayed visible results. | Project stalls and no portfolio is available. | Break work into small deliverables; keep a minimal interim presence available. |
-| R-8 | **Security oversight.** Owner-only functionality is treated as secondary. | Compromise would damage reputation and contradict the project's purpose. | Treat security as a requirement from the start; address it explicitly in later phases. |
-| R-9 | **Educational goals overshadow user needs.** Technology choices drive decisions instead of the problem. | Product serves the owner's learning but not its audience. | Evaluate decisions against the target users defined in this document. |
+| ID  | Risk                                                                                                    | Impact                                                                                           | Mitigation                                                                                                                      |
+| --- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| R-1 | **Scope creep.** Features accumulate beyond what the problem requires.                                  | Delays delivery; weakens focus; project may remain unfinished.                                   | Define scope explicitly in Phase 3; require new ideas to be justified against the problem statement; defer non-essential items. |
+| R-2 | **Overengineering.** Complexity exceeds what a personal portfolio needs.                                | Slows progress; increases maintenance burden; may obscure rather than demonstrate good judgment. | Favor the simplest approach that satisfies a documented need; review decisions for proportionality.                             |
+| R-3 | **Documentation becoming outdated.** Documents diverge from reality as the project evolves.             | Undermines the credibility the documentation is meant to provide.                                | Version documents; update them as part of any related change; review them at each phase boundary.                               |
+| R-4 | **Poor content quality.** Descriptions are vague, inflated, or incomplete.                              | A technically sound platform still fails to convince reviewers.                                  | Establish content standards early; write project narratives with problem, role, and outcome; seek external review.              |
+| R-5 | **Lack of consistency.** Visual, structural, or editorial inconsistency across the product.             | Reduces professionalism and trust.                                                               | Define shared conventions before building; review work against them.                                                            |
+| R-6 | **Time constraints.** Solo development competes with job search and other commitments.                  | Incomplete delivery at the time the portfolio is needed.                                         | Sequence work by value; accept incremental release; maintain a realistic schedule.                                              |
+| R-7 | **Loss of motivation or abandonment.** Long effort with delayed visible results.                        | Project stalls and no portfolio is available.                                                    | Break work into small deliverables; keep a minimal interim presence available.                                                  |
+| R-8 | **Security oversight.** Owner-only functionality is treated as secondary.                               | Compromise would damage reputation and contradict the project's purpose.                         | Treat security as a requirement from the start; address it explicitly in later phases.                                          |
+| R-9 | **Educational goals overshadow user needs.** Technology choices drive decisions instead of the problem. | Product serves the owner's learning but not its audience.                                        | Evaluate decisions against the target users defined in this document.                                                           |
 
 ---
 
@@ -281,16 +281,16 @@ Success is evaluated against observable outcomes. Targets are initial and may be
 
 ## 15. Constraints
 
-| Category | Constraint |
-| --- | --- |
-| **Team** | Single developer responsible for planning, design, build, and maintenance |
-| **Time** | Limited development time shared with job search and other obligations |
-| **Purpose** | Educational as well as professional; the project must teach and demonstrate, not only function |
-| **Technology** | Built on the MERN stack with TypeScript, as defined in the project brief |
-| **Budget** | Personal budget; reliance on free or low-cost services where possible |
-| **Browser support** | Current versions of modern browsers |
-| **Process** | Phases must be completed in order; later phases cannot begin before earlier ones are reviewed |
-| **Audience** | Content must be suitable for public viewing and for professional evaluation |
+| Category            | Constraint                                                                                     |
+| ------------------- | ---------------------------------------------------------------------------------------------- |
+| **Team**            | Single developer responsible for planning, design, build, and maintenance                      |
+| **Time**            | Limited development time shared with job search and other obligations                          |
+| **Purpose**         | Educational as well as professional; the project must teach and demonstrate, not only function |
+| **Technology**      | Built on the MERN stack with TypeScript, as defined in the project brief                       |
+| **Budget**          | Personal budget; reliance on free or low-cost services where possible                          |
+| **Browser support** | Current versions of modern browsers                                                            |
+| **Process**         | Phases must be completed in order; later phases cannot begin before earlier ones are reviewed  |
+| **Audience**        | Content must be suitable for public viewing and for professional evaluation                    |
 
 ---
 
@@ -298,21 +298,21 @@ Success is evaluated against observable outcomes. Targets are initial and may be
 
 This document intentionally excludes the following. Each belongs to a later phase or document.
 
-| Excluded Topic | Reason |
-| --- | --- |
-| Product vision and positioning | Phase 2 — Vision |
-| Feature scope and prioritization | Phase 3 — Scope |
+| Excluded Topic                             | Reason                            |
+| ------------------------------------------ | --------------------------------- |
+| Product vision and positioning             | Phase 2 — Vision                  |
+| Feature scope and prioritization           | Phase 3 — Scope                   |
 | Functional and non-functional requirements | Phase 4 — Functional Requirements |
-| User flows and journeys | Phase 5 — User Flows |
-| Database design | Later design phase |
-| API design | Later design phase |
-| System architecture | Later design phase |
-| UI and visual design | Later design phase |
-| Authentication design | Later design phase |
-| Folder and code structure | Later design phase |
-| Deployment and hosting | Later delivery phase |
-| Testing strategy | Later delivery phase |
-| Implementation details | Later delivery phase |
+| User flows and journeys                    | Phase 5 — User Flows              |
+| Database design                            | Later design phase                |
+| API design                                 | Later design phase                |
+| System architecture                        | Later design phase                |
+| UI and visual design                       | Later design phase                |
+| Authentication design                      | Later design phase                |
+| Folder and code structure                  | Later design phase                |
+| Deployment and hosting                     | Later delivery phase              |
+| Testing strategy                           | Later delivery phase              |
+| Implementation details                     | Later delivery phase              |
 
 ---
 
