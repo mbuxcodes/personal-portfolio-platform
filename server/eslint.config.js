@@ -6,6 +6,7 @@ import tseslint from 'typescript-eslint';
 
 // Layer rules follow ARCHITECTURE_DESIGN.md Sections 7.2 and 7.4, and TD-049.
 // A layer lists only what it MAY import; everything else is rejected.
+// A shared folder may always import its own files.
 // Inside src/modules/<module>, a file's layer comes from its suffix: <module>.<layer>.ts.
 const layer = (...categories) => ({ file: { categories } });
 const ownModule = (...categories) => ({
@@ -39,11 +40,12 @@ const policies = [
   { from: layer('model', 'mappers', 'schema'), allow: [{ to: shared('utils') }] },
   {
     from: shared('middleware'),
-    allow: [{ to: layer('service') }, { to: shared('utils', 'config') }],
+    allow: [{ to: layer('service') }, { to: shared('middleware', 'utils', 'config') }],
   },
-  { from: shared('gateway'), allow: [{ to: shared('utils', 'config') }] },
-  { from: shared('utils'), allow: [] },
-  { from: shared('config'), allow: [] },
+  { from: shared('gateway'), allow: [{ to: shared('gateway', 'utils', 'config') }] },
+  { from: shared('lifecycle'), allow: [{ to: shared('utils', 'lifecycle') }] },
+  { from: shared('utils'), allow: [{ to: shared('utils') }] },
+  { from: shared('config'), allow: [{ to: shared('config') }] },
 ];
 
 export default defineConfig([
@@ -73,6 +75,7 @@ export default defineConfig([
         { type: 'module', pattern: 'src/modules/*', capture: ['name'] },
         { type: 'middleware', pattern: 'src/middleware' },
         { type: 'gateway', pattern: 'src/gateways' },
+        { type: 'lifecycle', pattern: 'src/lifecycle' },
         { type: 'utils', pattern: 'src/utils' },
         { type: 'config', pattern: 'src/config' },
       ],
