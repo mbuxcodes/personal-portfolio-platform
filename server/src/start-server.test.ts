@@ -28,7 +28,12 @@ function setup(overrides: { port?: number } = {}) {
 
   const start = async (registerRoutes?: Parameters<typeof startServer>[0]['registerRoutes']) => {
     const result = await startServer({
-      settings: { port: overrides.port ?? 0, trustProxyHops: 0, shutdownTimeoutMs: 10_000 },
+      runtime: {
+        environment: 'test',
+        port: overrides.port ?? 0,
+        trustProxyHops: 0,
+        shutdownTimeoutMs: 10_000,
+      },
       hooks,
       logger,
       process: fakeProcess,

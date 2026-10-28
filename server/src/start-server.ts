@@ -1,14 +1,14 @@
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { createApp, type AppOptions } from './app.js';
-import type { BootstrapSettings } from '#config/bootstrap-settings';
+import type { RuntimeConfig } from '#config/configuration';
 import { registerFatalErrorPolicy } from '#lifecycle/fatal-error-policy';
 import { createGracefulShutdown, type Shutdown, type Timers } from '#lifecycle/graceful-shutdown';
 import type { HookRegistry } from '#lifecycle/hook-registry';
 import { describeError, type Logger } from '#utils/logger';
 
 export interface StartServerOptions {
-  settings: BootstrapSettings;
+  runtime: RuntimeConfig;
   hooks: HookRegistry;
   logger: Logger;
   /** The process, or anything that emits the same signal and error events. */
@@ -30,10 +30,10 @@ export interface RunningServer {
  * Any startup failure takes the same graceful path as a fatal error and exits with a failure code.
  */
 export async function startServer(options: StartServerOptions): Promise<RunningServer> {
-  const { settings, hooks, logger } = options;
+  const { runtime, hooks, logger } = options;
 
   const app = createApp({
-    trustProxyHops: settings.trustProxyHops,
+    trustProxyHops: runtime.trustProxyHops,
     registerRoutes: options.registerRoutes,
   });
   const server = createServer(app);
@@ -41,7 +41,7 @@ export async function startServer(options: StartServerOptions): Promise<RunningS
     server,
     hooks,
     logger,
-    timeoutMs: settings.shutdownTimeoutMs,
+    timeoutMs: runtime.shutdownTimeoutMs,
     exit: options.exit,
     timers: options.timers,
   });
@@ -53,7 +53,7 @@ export async function startServer(options: StartServerOptions): Promise<RunningS
 
   try {
     await hooks.runStartup();
-    await listen(server, settings.port);
+    await listen(server, runtime.port);
   } catch (error) {
     logger.fatal('startup_failed', { error: describeError(error) });
     await shutdown('startup_failed', 1);

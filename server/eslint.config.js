@@ -92,6 +92,16 @@ export default defineConfig([
     rules: {
       'boundaries/dependencies': ['error', { default: 'disallow', checkInternals: true, policies }],
 
+      // The environment is read in one place only: src/config (TD-046).
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'process',
+          property: 'env',
+          message: 'Read settings from the validated configuration in src/config.',
+        },
+      ],
+
       // Only the media gateway may import the media service SDK (ARCHITECTURE_DESIGN.md 7.4).
       'no-restricted-imports': [
         'error',
@@ -116,5 +126,10 @@ export default defineConfig([
   {
     files: ['src/gateways/media/**/*.ts'],
     rules: { 'no-restricted-imports': 'off' },
+  },
+
+  {
+    files: ['src/config/**/*.ts'],
+    rules: { 'no-restricted-properties': 'off' },
   },
 ]);
