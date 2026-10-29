@@ -1,4 +1,8 @@
-import { environmentSchema, type ParsedEnvironment } from '#config/environment-schema';
+import {
+  environmentSchema,
+  type LogLevelName,
+  type ParsedEnvironment,
+} from '#config/environment-schema';
 
 export type EnvironmentName = 'development' | 'test' | 'production';
 
@@ -9,6 +13,8 @@ export interface RuntimeConfig {
   readonly trustProxyHops: number;
   /** How long in-flight requests may take to finish during shutdown (TD-047). */
   readonly shutdownTimeoutMs: number;
+  /** The least severe level that is logged (TD-028). */
+  readonly logLevel: LogLevelName;
 }
 
 export interface DatabaseConfig {
@@ -80,6 +86,20 @@ export interface Config {
   readonly limits: LimitsConfig;
   readonly rateLimits: RateLimitsConfig;
   readonly site: SiteConfig;
+}
+
+/**
+ * Every secret value in the configuration. The logger removes these from anything it writes, so a
+ * secret cannot reach a log even through an error message. A new secret setting is added here.
+ */
+export function secretValuesOf(config: Config): readonly string[] {
+  return [
+    config.database.url,
+    config.media.apiKey,
+    config.media.apiSecret,
+    config.session.accessTokenSecret,
+    config.session.refreshTokenSecret,
+  ];
 }
 
 type Environment = Readonly<Record<string, string | undefined>>;
@@ -166,6 +186,7 @@ function buildConfig(values: ParsedEnvironment): Config {
       port: values.PORT,
       trustProxyHops: values.TRUST_PROXY_HOPS,
       shutdownTimeoutMs: values.SHUTDOWN_TIMEOUT_SECONDS * 1000,
+      logLevel: values.LOG_LEVEL,
     }),
     database: Object.freeze({ url: values.DATABASE_URL }),
     media: Object.freeze({

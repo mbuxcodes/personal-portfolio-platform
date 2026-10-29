@@ -7,6 +7,11 @@ const MIN_DISTINCT_SECRET_CHARACTERS = 8;
 
 const MAX_INTEGER = Number.MAX_SAFE_INTEGER;
 
+/** The log levels the server supports, most severe first (ARCHITECTURE_DESIGN.md Section 15.1). */
+export const LOG_LEVELS = ['fatal', 'error', 'warn', 'info', 'debug'] as const;
+
+export type LogLevelName = (typeof LOG_LEVELS)[number];
+
 const digits = z.string().regex(/^\d+$/);
 
 /**
@@ -45,6 +50,7 @@ export const environmentSchema = z.object({
   PORT: integerOr('5000', 0, 65535),
   SHUTDOWN_TIMEOUT_SECONDS: integerOr('10', 1, 120),
   TRUST_PROXY_HOPS: integerOr('0', 0, 10),
+  LOG_LEVEL: z.enum(LOG_LEVELS).default('info'),
 
   // Database (secret: the connection string carries credentials)
   DATABASE_URL: z.string().regex(/^mongodb(\+srv)?:\/\/\S+$/),

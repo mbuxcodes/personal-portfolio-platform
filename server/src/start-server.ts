@@ -32,7 +32,14 @@ export interface RunningServer {
 export async function startServer(options: StartServerOptions): Promise<RunningServer> {
   const { runtime, hooks, logger } = options;
 
+  logger.info('server_starting', {
+    environment: runtime.environment,
+    port: runtime.port,
+    logLevel: runtime.logLevel,
+  });
+
   const app = createApp({
+    logger,
     trustProxyHops: runtime.trustProxyHops,
     registerRoutes: options.registerRoutes,
   });

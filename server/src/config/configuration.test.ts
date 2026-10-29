@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { InvalidConfigurationError, loadConfig } from '#config/configuration';
+import { InvalidConfigurationError, loadConfig, secretValuesOf } from '#config/configuration';
 import { environmentSchema } from '#config/environment-schema';
 
 // Obviously fake values that satisfy the rules. None is a real credential.
@@ -44,6 +44,7 @@ describe('valid configuration', () => {
         port: 5000,
         trustProxyHops: 0,
         shutdownTimeoutMs: 10_000,
+        logLevel: 'info',
       },
       database: { url: 'mongodb://localhost:27017/portfolio-test' },
       media: {
@@ -83,6 +84,7 @@ describe('valid configuration', () => {
       PORT: '8080',
       SHUTDOWN_TIMEOUT_SECONDS: '30',
       TRUST_PROXY_HOPS: '2',
+      LOG_LEVEL: 'debug',
       DATABASE_URL: 'mongodb+srv://cluster.example.test/portfolio',
       ACCESS_TOKEN_TTL_SECONDS: '300',
       SESSION_INACTIVITY_LIMIT_SECONDS: '600',
@@ -114,6 +116,7 @@ describe('valid configuration', () => {
       port: 8080,
       trustProxyHops: 2,
       shutdownTimeoutMs: 30_000,
+      logLevel: 'debug',
     });
     expect(config.database.url).toBe('mongodb+srv://cluster.example.test/portfolio');
     expect(config.session).toMatchObject({
@@ -145,6 +148,15 @@ describe('valid configuration', () => {
     expect(shortest.runtime.shutdownTimeoutMs).toBe(1000);
     const longest = loadConfig({ ...REQUIRED, SHUTDOWN_TIMEOUT_SECONDS: '120' });
     expect(longest.runtime.shutdownTimeoutMs).toBe(120_000);
+  });
+
+  it.each(['fatal', 'error', 'warn', 'info', 'debug'])('accepts the log level %s', (level) => {
+    expect(loadConfig({ ...REQUIRED, LOG_LEVEL: level }).runtime.logLevel).toBe(level);
+  });
+
+  it('logs at info level when no level is set', () => {
+    expect(loadConfig(REQUIRED).runtime.logLevel).toBe('info');
+    expect(loadConfig({ ...REQUIRED, LOG_LEVEL: '' }).runtime.logLevel).toBe('info');
   });
 
   it('ignores variables it does not know', () => {
@@ -215,6 +227,9 @@ describe('malformed values', () => {
     ['PORT', ' 80'],
     ['TRUST_PROXY_HOPS', '11'],
     ['TRUST_PROXY_HOPS', 'true'],
+    ['LOG_LEVEL', 'verbose'],
+    ['LOG_LEVEL', 'INFO'],
+    ['LOG_LEVEL', 'trace'],
     ['SHUTDOWN_TIMEOUT_SECONDS', '0'],
     ['SHUTDOWN_TIMEOUT_SECONDS', '121'],
     ['DATABASE_URL', 'postgres://localhost/portfolio'],
@@ -385,6 +400,28 @@ describe('failure messages', () => {
 
   it('name the variables in the message', () => {
     expect(failureOf({ PORT: 'x' }).message).toContain('PORT');
+  });
+});
+
+describe('secret values', () => {
+  it('lists every secret in the configuration, so the logger can remove them', () => {
+    const config = loadConfig(REQUIRED);
+
+    expect(secretValuesOf(config)).toEqual([
+      'mongodb://localhost:27017/portfolio-test',
+      'test-api-key',
+      'test-api-secret',
+      'test-access-secret-0123456789abcdef',
+      'test-refresh-secret-fedcba9876543210',
+    ]);
+  });
+
+  it('does not list a value that is not secret', () => {
+    const secrets = secretValuesOf(loadConfig(REQUIRED));
+
+    for (const harmless of ['test-cloud', 'portfolio-test', 'https://portfolio.test']) {
+      expect(secrets).not.toContain(harmless);
+    }
   });
 });
 

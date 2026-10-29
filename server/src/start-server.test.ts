@@ -18,9 +18,9 @@ afterEach(() => {
   }
 });
 
-function setup(overrides: { port?: number } = {}) {
+function setup(overrides: { port?: number; secrets?: readonly string[] } = {}) {
   const fakeProcess = new EventEmitter();
-  const { logger, entries, events } = createMemoryLogger();
+  const { logger, entries, events, output } = createMemoryLogger({ secrets: overrides.secrets });
   const hooks = createHookRegistry(logger);
   const manual = createManualTimers();
   const exited = createDeferred<number>();
@@ -33,6 +33,7 @@ function setup(overrides: { port?: number } = {}) {
         port: overrides.port ?? 0,
         trustProxyHops: 0,
         shutdownTimeoutMs: 10_000,
+        logLevel: 'info',
       },
       hooks,
       logger,
@@ -45,7 +46,7 @@ function setup(overrides: { port?: number } = {}) {
     return result;
   };
 
-  return { fakeProcess, entries, events, hooks, manual, exited, exit, start };
+  return { fakeProcess, entries, events, output, hooks, manual, exited, exit, start };
 }
 
 const urlOf = (server: RunningServer['server']): string =>
@@ -64,6 +65,7 @@ describe('startServer', () => {
     expect(server.listening).toBe(true);
     expect(order).toEqual(['first', 'second']);
     expect(events()).toEqual([
+      'server_starting',
       'startup_hook_completed',
       'startup_hook_completed',
       'server_listening',
@@ -227,5 +229,60 @@ describe('startServer', () => {
     for (const event of ['SIGINT', 'SIGTERM', 'uncaughtException', 'unhandledRejection']) {
       expect(fakeProcess.listenerCount(event)).toBe(1);
     }
+  });
+
+  it('logs the start with the environment, port, and level, and never a secret', async () => {
+    const { start, entries, output } = setup();
+
+    await start();
+
+    expect(entries[0]).toEqual({
+      level: 'info',
+      time: expect.any(String),
+      event: 'server_starting',
+      environment: 'test',
+      port: 0,
+      logLevel: 'info',
+    });
+    expect(output()).not.toMatch(/CANARY|SUPER_SECRET_123/);
+  });
+
+  it('writes one completion entry for each request the running server handles', async () => {
+    const { start, entries } = setup();
+    const { server } = await start(({ publicRoutes }) => {
+      publicRoutes.get('/probe', (_request, response) => void response.send('served'));
+    });
+
+    await fetch(`${urlOf(server)}${API_BASE_PATH}/probe`);
+    await fetch(`${urlOf(server)}${API_BASE_PATH}/probe`);
+
+    const completions = entries.filter((entry) => entry.event === 'request_completed');
+    expect(completions).toHaveLength(2);
+    expect(completions[0]).toMatchObject({ method: 'GET', status: 200 });
+    expect(completions[0]?.requestId).not.toBe(completions[1]?.requestId);
+  });
+
+  it('logs startup and shutdown problems without exposing a secret', async () => {
+    const { hooks, start, exited, output, entries } = setup({ secrets: ['SUPER_SECRET_123'] });
+    hooks.onStartup('database', () => {
+      throw new Error('could not connect using SUPER_SECRET_123');
+    });
+    hooks.onShutdown('database', () => {
+      throw new Error('could not close SUPER_SECRET_123');
+    });
+
+    await start();
+    await exited.promise;
+
+    expect(entries.map((entry) => entry.event)).toEqual(
+      expect.arrayContaining([
+        'startup_hook_failed',
+        'startup_failed',
+        'shutdown_started',
+        'shutdown_hook_failed',
+        'shutdown_completed',
+      ]),
+    );
+    expect(output()).not.toContain('SUPER_SECRET_123');
   });
 });
