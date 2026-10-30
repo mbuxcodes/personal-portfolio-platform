@@ -8,6 +8,7 @@ import { startServer, type RunningServer } from './start-server.js';
 import { createDeferred } from '../test/deferred.js';
 import { createManualTimers } from '../test/manual-timers.js';
 import { createMemoryLogger } from '../test/memory-logger.js';
+import { createTestPipelineConfig } from '../test/pipeline-config.js';
 
 const running: RunningServer[] = [];
 
@@ -35,6 +36,7 @@ function setup(overrides: { port?: number; secrets?: readonly string[] } = {}) {
         shutdownTimeoutMs: 10_000,
         logLevel: 'info',
       },
+      pipeline: createTestPipelineConfig(),
       hooks,
       logger,
       process: fakeProcess,

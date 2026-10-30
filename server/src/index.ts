@@ -1,5 +1,6 @@
 import { InvalidConfigurationError, loadConfig, type Config } from '#config/configuration';
 import { createHookRegistry } from '#lifecycle/hook-registry';
+import { pipelineConfigOf } from '#middleware/pipeline';
 import { createLogger } from '#utils/logger';
 import { configureLogging } from './configure-logging.js';
 import { startServer } from './start-server.js';
@@ -34,5 +35,12 @@ if (config) {
 
   // Later milestones register their startup and shutdown hooks on `hooks` before the start,
   // using the validated `config`.
-  await startServer({ runtime: config.runtime, hooks, logger, process, exit });
+  await startServer({
+    runtime: config.runtime,
+    pipeline: pipelineConfigOf(config),
+    hooks,
+    logger,
+    process,
+    exit,
+  });
 }

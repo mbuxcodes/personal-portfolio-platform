@@ -5,10 +5,13 @@ import type { RuntimeConfig } from '#config/configuration';
 import { registerFatalErrorPolicy } from '#lifecycle/fatal-error-policy';
 import { createGracefulShutdown, type Shutdown, type Timers } from '#lifecycle/graceful-shutdown';
 import type { HookRegistry } from '#lifecycle/hook-registry';
+import type { PipelineConfig } from '#middleware/pipeline';
 import { describeError, type Logger } from '#utils/logger';
 
 export interface StartServerOptions {
   runtime: RuntimeConfig;
+  /** What the shared request pipeline reads from configuration. */
+  pipeline: PipelineConfig;
   hooks: HookRegistry;
   logger: Logger;
   /** The process, or anything that emits the same signal and error events. */
@@ -41,6 +44,7 @@ export async function startServer(options: StartServerOptions): Promise<RunningS
   const app = createApp({
     logger,
     trustProxyHops: runtime.trustProxyHops,
+    pipeline: options.pipeline,
     registerRoutes: options.registerRoutes,
   });
   const server = createServer(app);

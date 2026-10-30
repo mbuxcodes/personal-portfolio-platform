@@ -5,7 +5,10 @@ import request from 'supertest';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from './app.js';
 import { createMemoryLogger } from '../test/memory-logger.js';
+import { createTestPipelineConfig } from '../test/pipeline-config.js';
 import { ADMIN_GROUP_PATH, API_BASE_PATH, AUTH_GROUP_PATH } from './route-groups.js';
+
+const pipeline = createTestPipelineConfig();
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -15,6 +18,7 @@ function appWithEchoRoutes(trustProxyHops: number): Express {
   return createApp({
     logger: createMemoryLogger().logger,
     trustProxyHops,
+    pipeline,
     registerRoutes: ({ publicRoutes }) => {
       publicRoutes.get('/client-address', (req, res) => {
         res.json({ ip: req.ip });
@@ -27,7 +31,7 @@ describe('application factory', () => {
   it('returns an application without opening a port', async () => {
     const listen = vi.spyOn(Server.prototype, 'listen');
 
-    const app = createApp({ logger: createMemoryLogger().logger, trustProxyHops: 0 });
+    const app = createApp({ logger: createMemoryLogger().logger, trustProxyHops: 0, pipeline });
 
     expect(typeof app).toBe('function');
     expect(listen).not.toHaveBeenCalled();
@@ -48,7 +52,7 @@ describe('application factory', () => {
   });
 
   it('does not identify the framework', async () => {
-    const app = createApp({ logger: createMemoryLogger().logger, trustProxyHops: 0 });
+    const app = createApp({ logger: createMemoryLogger().logger, trustProxyHops: 0, pipeline });
 
     const response = await request(app).get('/anything');
 
@@ -61,8 +65,8 @@ describe('trust proxy', () => {
   it('stores the configured number of proxy steps', () => {
     const { logger } = createMemoryLogger();
 
-    expect(createApp({ logger, trustProxyHops: 0 }).get('trust proxy')).toBe(0);
-    expect(createApp({ logger, trustProxyHops: 2 }).get('trust proxy')).toBe(2);
+    expect(createApp({ logger, trustProxyHops: 0, pipeline }).get('trust proxy')).toBe(0);
+    expect(createApp({ logger, trustProxyHops: 2, pipeline }).get('trust proxy')).toBe(2);
   });
 
   it('ignores the forwarded address when no proxy is trusted', async () => {
@@ -97,7 +101,7 @@ describe('route groups', () => {
   });
 
   it('serves no route until a module attaches one', async () => {
-    const app = createApp({ logger: createMemoryLogger().logger, trustProxyHops: 0 });
+    const app = createApp({ logger: createMemoryLogger().logger, trustProxyHops: 0, pipeline });
 
     for (const path of [
       API_BASE_PATH,
@@ -113,6 +117,7 @@ describe('route groups', () => {
     const app = createApp({
       logger: createMemoryLogger().logger,
       trustProxyHops: 0,
+      pipeline,
       registerRoutes: ({ authRoutes, adminRoutes, publicRoutes }) => {
         authRoutes.get('/probe', (_req, res) => void res.send('auth'));
         adminRoutes.get('/probe', (_req, res) => void res.send('admin'));
@@ -129,6 +134,7 @@ describe('route groups', () => {
     const app = createApp({
       logger: createMemoryLogger().logger,
       trustProxyHops: 0,
+      pipeline,
       registerRoutes: ({ adminRoutes, publicRoutes }) => {
         adminRoutes.get('/only-admin', (_req, res) => void res.send('admin'));
         publicRoutes.get('/only-public', (_req, res) => void res.send('public'));
@@ -147,6 +153,7 @@ describe('request logging', () => {
     const app = createApp({
       logger,
       trustProxyHops: 0,
+      pipeline,
       registerRoutes: ({ publicRoutes }) => {
         publicRoutes.get('/items/:id', (_req, res) => void res.send('ok'));
       },
@@ -170,6 +177,7 @@ describe('request logging', () => {
     const app = createApp({
       logger,
       trustProxyHops: 0,
+      pipeline,
       registerRoutes: ({ authRoutes, adminRoutes, publicRoutes }) => {
         for (const group of [authRoutes, adminRoutes, publicRoutes]) {
           group.use(express.json());
