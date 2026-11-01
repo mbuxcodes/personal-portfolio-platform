@@ -299,7 +299,7 @@ Global client state is limited to things that are not server data.
 
 | State | Why Client-Side |
 | --- | --- |
-| **Session status** | Whether an Admin session is active, and the current Admin. Derived from the current-user call, and cleared on session end |
+| **Session status** | Whether an Admin session is active (unknown, signed in, or signed out). Derived from the current-user call, and set to signed out on session end. The current Admin's details are read from the current-user query, never copied here |
 | **Notifications** | Success and failure messages after actions (FR-ADMIN-GEN-001) |
 | **Pending edit snapshot** | Form content held in memory when a session ends during editing, restored after sign-in (ADR-22) |
 | **Unsaved-changes flag** | Whether the current form has unsaved changes |
