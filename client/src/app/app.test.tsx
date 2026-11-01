@@ -4,12 +4,10 @@ import { describe, expect, it } from 'vitest';
 import App from '@/app/app';
 
 describe('App', () => {
-  it('renders the application heading without accessibility violations', async () => {
+  it('renders the page for the current address without accessibility violations', async () => {
     const { container } = render(<App />);
 
-    expect(
-      screen.getByRole('heading', { name: 'Personal Portfolio Platform' }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Home' })).toBeInTheDocument();
     expect((await axe(container)).violations).toEqual([]);
   });
 });
