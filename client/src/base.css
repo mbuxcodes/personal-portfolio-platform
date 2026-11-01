@@ -1,0 +1,121 @@
+/*
+ * Base styles (M3.2). Tailwind's reset (Preflight) has already removed browser margins, set
+ * `box-sizing: border-box`, and made headings and lists unstyled. This file sets the defaults the
+ * reset leaves open, using tokens only.
+ *
+ * Nothing here needs an inline style or an inline script, so the strict content security policy
+ * (TD-029) holds.
+ */
+@layer base {
+  :root {
+    /* Dark mode is not built yet. Telling the browser keeps form controls light. */
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: var(--font-weight-regular);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    color: var(--color-text-primary);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--text-heading-1);
+    line-height: var(--text-heading-1--line-height);
+    font-weight: var(--text-heading-1--font-weight);
+  }
+
+  h2 {
+    font-size: var(--text-heading-2);
+    line-height: var(--text-heading-2--line-height);
+    font-weight: var(--text-heading-2--font-weight);
+  }
+
+  h3 {
+    font-size: var(--text-heading-3);
+    line-height: var(--text-heading-3--line-height);
+    font-weight: var(--text-heading-3--font-weight);
+  }
+
+  h4 {
+    font-size: var(--text-heading-4);
+    line-height: var(--text-heading-4--line-height);
+    font-weight: var(--text-heading-4--font-weight);
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--color-accent-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-code);
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-text-on-accent);
+  }
+
+  /*
+   * Focus (FR-A11Y-002). Shown for keyboard use, not for mouse clicks. The ring sits outside the
+   * element with a gap, so it is read against the surface behind the element. On the inverse
+   * surface the ring color changes, because the light-surface color would disappear there.
+   */
+  :focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  [data-surface='inverse'] {
+    --color-focus-ring: var(--color-focus-ring-inverse);
+  }
+
+  /*
+   * Reduced motion (FR-A11Y-008). Animation and transitions are cut to a single instant frame,
+   * and smooth scrolling is turned off. Content never depends on them.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

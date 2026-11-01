@@ -1,22 +1,11 @@
-import { useRef, type CSSProperties } from 'react';
+import { useRef } from 'react';
 import { useOnNavigation } from './use-on-navigation';
-
-// Hidden from view, still read by screen readers. Tailwind's `sr-only` replaces this in M3.2.
-const visuallyHidden: CSSProperties = {
-  position: 'absolute',
-  width: '1px',
-  height: '1px',
-  margin: '-1px',
-  padding: 0,
-  overflow: 'hidden',
-  clip: 'rect(0, 0, 0, 0)',
-  whiteSpace: 'nowrap',
-  border: 0,
-};
 
 /**
  * A live region that announces each page change to screen readers.
  * It says nothing on first load, because the browser announces a loaded page itself.
+ * `sr-only` hides it from view and keeps it available to screen readers. It is a class, not an
+ * inline style, because the content security policy blocks inline styles (TD-029).
  */
 export function NavigationAnnouncer() {
   const regionRef = useRef<HTMLDivElement>(null);
@@ -27,5 +16,5 @@ export function NavigationAnnouncer() {
     }
   });
 
-  return <div ref={regionRef} role="status" aria-atomic="true" style={visuallyHidden} />;
+  return <div ref={regionRef} role="status" aria-atomic="true" className="sr-only" />;
 }

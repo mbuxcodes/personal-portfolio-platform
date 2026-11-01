@@ -19,7 +19,8 @@ The planning documents are the contract for this project. Code follows them. Whe
 
 ## Working conventions
 
-| Document                                       | What it defines                               |
-| ---------------------------------------------- | --------------------------------------------- |
-| [COMMIT_CONVENTIONS.md](COMMIT_CONVENTIONS.md) | Commit messages, branches, merging, and hooks |
-| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) | Names for code, files, and folders            |
+| Document                                       | What it defines                                  |
+| ---------------------------------------------- | ------------------------------------------------ |
+| [COMMIT_CONVENTIONS.md](COMMIT_CONVENTIONS.md) | Commit messages, branches, merging, and hooks    |
+| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) | Names for code, files, and folders               |
+| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)           | Design tokens, fonts, and how to style with them |

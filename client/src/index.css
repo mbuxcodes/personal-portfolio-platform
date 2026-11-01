@@ -1,5 +1,8 @@
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
+/*
+ * The one stylesheet of the client. Order matters: Tailwind first, then fonts, tokens, and base.
+ * See docs/DESIGN_SYSTEM.md.
+ */
+@import 'tailwindcss';
+@import './fonts.css';
+@import './tokens.css';
+@import './base.css';
