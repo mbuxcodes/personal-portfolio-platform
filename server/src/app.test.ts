@@ -162,14 +162,17 @@ describe('request logging', () => {
     await request(app).get(`${API_BASE_PATH}/items/1`).expect(200);
     await request(app).get(`${API_BASE_PATH}/missing`).expect(404);
 
-    expect(entries.map((entry) => entry.event)).toEqual(['request_completed', 'request_completed']);
-    expect(entries[0]).toMatchObject({
+    // The 404 is also logged as a failure by the error handler (M2.5). Completion entries are
+    // the subject of this test.
+    const completions = entries.filter((entry) => entry.event === 'request_completed');
+    expect(completions).toHaveLength(2);
+    expect(completions[0]).toMatchObject({
       method: 'GET',
       route: `${API_BASE_PATH}/items/:id`,
       status: 200,
     });
-    expect(entries[1]).toMatchObject({ route: null, status: 404 });
-    expect(entries[0]?.requestId).not.toBe(entries[1]?.requestId);
+    expect(completions[1]).toMatchObject({ route: null, status: 404 });
+    expect(completions[0]?.requestId).not.toBe(completions[1]?.requestId);
   });
 
   it('never writes credentials, cookies, or request bodies sent through any route group', async () => {

@@ -1,5 +1,7 @@
 import express, { type Express } from 'express';
+import { createErrorHandler } from '#middleware/error-handler';
 import { installPipeline, type PipelineConfig, type RouteProtections } from '#middleware/pipeline';
+import { createUnmatchedRouteHandler } from '#middleware/unmatched-route';
 import type { Logger } from '#utils/logger';
 import {
   ADMIN_GROUP_PATH,
@@ -36,7 +38,9 @@ export interface AppOptions {
  *
  * The shared request pipeline of ARCHITECTURE_DESIGN.md Section 7.3 is installed here, in order, by
  * `installPipeline`. The session check (step 5) and the cross-site check (step 6) are not installed
- * for every request: the groups that need them attach them (Phase 5).
+ * for every request: the groups that need them attach them (Phase 5). After the routes come the
+ * answer for a request that no route handled (404 or 405) and the central error handler (step 10),
+ * in that order, so both are always last.
  */
 export function createApp({
   logger,
@@ -60,9 +64,16 @@ export function createApp({
   registerRoutes?.(groups, protections);
 
   // Most specific first, so the public group at the base path never shadows the others.
-  app.use(AUTH_GROUP_PATH, groups.authRoutes);
-  app.use(ADMIN_GROUP_PATH, groups.adminRoutes);
-  app.use(API_BASE_PATH, groups.publicRoutes);
+  const mounts = [
+    { pathPrefix: AUTH_GROUP_PATH, router: groups.authRoutes },
+    { pathPrefix: ADMIN_GROUP_PATH, router: groups.adminRoutes },
+    { pathPrefix: API_BASE_PATH, router: groups.publicRoutes },
+  ];
+  for (const { pathPrefix, router } of mounts) app.use(pathPrefix, router);
+
+  // Nothing above handled the request: 404 or 405. Then every failure leaves through one handler.
+  app.use(createUnmatchedRouteHandler(mounts));
+  app.use(createErrorHandler({ logger }));
 
   return app;
 }

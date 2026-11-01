@@ -2,6 +2,7 @@ import type { Express } from 'express';
 import request from 'supertest';
 
 export type WriteMethod = 'post' | 'put' | 'patch' | 'delete';
+export type HttpMethod = WriteMethod | 'get' | 'head' | 'options';
 
 /**
  * Starts a request with a method chosen at run time.
@@ -11,7 +12,7 @@ export type WriteMethod = 'post' | 'put' | 'patch' | 'delete';
  * then reports `no-unexpected-multiline`. Here the lookup cannot be split, and the caller chains
  * `.send()`, `.set()` and `.expect()` on the result.
  */
-export function requestWith(app: Express, method: WriteMethod, path: string) {
+export function requestWith(app: Express, method: HttpMethod, path: string) {
   const agent = request(app);
   return agent[method](path);
 }
