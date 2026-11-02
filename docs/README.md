@@ -19,9 +19,10 @@ The planning documents are the contract for this project. Code follows them. Whe
 
 ## Working conventions
 
-| Document                                       | What it defines                                          |
-| ---------------------------------------------- | -------------------------------------------------------- |
-| [COMMIT_CONVENTIONS.md](COMMIT_CONVENTIONS.md) | Commit messages, branches, merging, and hooks            |
-| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) | Names for code, files, and folders                       |
-| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)           | Design tokens, fonts, and how to style with them         |
-| [CLIENT_STATE.md](CLIENT_STATE.md)             | The four client-only slices, and the no-server-data rule |
+| Document                                       | What it defines                                      |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| [COMMIT_CONVENTIONS.md](COMMIT_CONVENTIONS.md) | Commit messages, branches, merging, and hooks        |
+| [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md) | Names for code, files, and folders                   |
+| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)           | Design tokens, fonts, and how to style with them     |
+| [CLIENT_STATE.md](CLIENT_STATE.md)             | The client-only slices, and the no-server-data rule  |
+| [DATA_ACCESS.md](DATA_ACCESS.md)               | The API data layer: errors, renewal, tags, freshness |

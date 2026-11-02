@@ -1,6 +1,6 @@
 # Client State
 
-What the Redux store holds, and the rule that keeps it small. This note belongs to milestone M3.3. The decisions behind it are TD-006 (Redux Toolkit), TD-007 (RTK Query), ADR-09, and ADR-22. The state itself is defined in `ARCHITECTURE_DESIGN.md` Section 6.4.
+What the Redux store holds, and the rule that keeps it small. This note belongs to milestones M3.3 and M3.4. The decisions behind it are TD-006 (Redux Toolkit), TD-007 (RTK Query), ADR-09, and ADR-22. The state itself is defined in `ARCHITECTURE_DESIGN.md` Section 6.4.
 
 ## 1. The rule
 
@@ -16,7 +16,7 @@ Why:
 
 ## 2. What the store holds
 
-Exactly four slices, and nothing else. Each is client-only: it describes this browser tab, not the server's records.
+Exactly four slices, plus the server-state cache that RTK Query mounts under the `api` key (M3.4). Each slice is client-only: it describes this browser tab, not the server's records. The cache is the one place server data lives; see `DATA_ACCESS.md`.
 
 | Slice (`state` key) | File                             | Holds                                                                                 | Why it is client-side                                                              |
 | ------------------- | -------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -25,7 +25,7 @@ Exactly four slices, and nothing else. Each is client-only: it describes this br
 | `editSnapshot`      | `state/edit-snapshot-slice.ts`   | `null`, or `{ path, values }`: the form content when the session ended during editing | Restored after sign-in (ADR-22)                                                    |
 | `unsavedChanges`    | `state/unsaved-changes-slice.ts` | `true` or `false`                                                                     | Whether the form on screen has unsaved changes (FR-ADMIN-GEN-002)                  |
 
-`state/store.ts` builds the store and `state/hooks.ts` has the typed hooks. Import everything through `@/state`, and use `useAppDispatch` and `useAppSelector`, never the plain React Redux hooks.
+`state/store.ts` builds the store (the four slices, the `api` cache and its middleware) and `state/hooks.ts` has the typed hooks. `store.ts` is the only file in `state/` that may import the data-access layer, and it hands the layer the one action it needs (`endSession`) as the thunk `extraArgument`. The layer never imports `state/`. Import everything through `@/state`, and use `useAppDispatch` and `useAppSelector`, never the plain React Redux hooks.
 
 ### The edit snapshot is memory only
 
@@ -51,10 +51,10 @@ Raise a message with `dispatch(notificationAdded('success', 'Project saved.'))`.
 Use this whenever a change touches `client/src/state`, or adds anything that reads or writes the store. A "no" to any item blocks the change.
 
 - [ ] **No server data in a slice.** Nothing that came from an API response is stored: not a record, not a list, not a count, not the Admin's details, not an error object. (Text a caller writes itself, such as a notification message, is allowed.)
-- [ ] **Still exactly four slices.** A new slice is a change to `ARCHITECTURE_DESIGN.md` Section 6.4 and TD-006 first, and a review against the rule in Section 1. The server-state cache (M3.4) is the only addition planned, and it holds server data by design.
+- [ ] **Still exactly four slices.** A new slice is a change to `ARCHITECTURE_DESIGN.md` Section 6.4 and TD-006 first, and a review against the rule in Section 1. The `api` key is the server-state cache (M3.4), not a slice: it holds server data by design, and it is the only such key.
 - [ ] **No persistence.** No browser storage, no browser database, no cookie, no persistence package, and no store subscriber that saves state.
 - [ ] **The snapshot stays in memory and is cleared after use.**
-- [ ] **No fetching, caching, or middleware** added in `state/`. Reading the API is the data-access layer's job.
+- [ ] **No fetching or hand-made caching** in `state/`, and no middleware except the RTK Query middleware. Reading the API is the data-access layer's job.
 - [ ] **State is serializable and strict.** No class instances, functions, `Date` objects, or files in state. TypeScript strict passes with no `any`.
 - [ ] **Typed hooks only**, imported from `@/state`.
 

@@ -16,7 +16,9 @@ const layers = {
   feature: ['shared-ui', 'data-access', 'state', 'utils'],
   'shared-ui': ['utils'],
   'data-access': ['utils', 'config'],
-  state: ['utils'],
+  // The store mounts the RTK Query cache and middleware, so it imports the data-access layer.
+  // The reverse is never allowed: data-access receives what it needs from the store as an argument.
+  state: ['utils', 'data-access'],
   utils: [],
   config: [],
 };

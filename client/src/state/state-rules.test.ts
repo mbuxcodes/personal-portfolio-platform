@@ -31,13 +31,33 @@ describe('client state rules', () => {
       expect(/\bfetch\(|XMLHttpRequest|axios|createApi|createAsyncThunk/.test(content), path).toBe(
         false,
       );
-      expect(/@\/data-access|createEntityAdapter/.test(content), path).toBe(false);
+      expect(/createEntityAdapter/.test(content), path).toBe(false);
     }
   });
 
-  it('adds no store enhancer or middleware of its own', () => {
+  // M3.4: the store mounts the RTK Query cache, so `store.ts` is the one file that may import the
+  // data-access layer. A slice that imports it is on its way to holding server data.
+  it('lets only store.ts import the data-access layer', () => {
     for (const [path, content] of files) {
-      expect(/\.concat\(|middleware:|enhancers:/.test(content), path).toBe(false);
+      const importsDataAccess = /@\/data-access/.test(content);
+
+      expect(importsDataAccess, path).toBe(path.endsWith('/store.ts'));
+    }
+  });
+
+  // The only middleware is the RTK Query one, and nothing else is added to the store.
+  it('adds no store enhancer or middleware except the RTK Query middleware', () => {
+    for (const [path, content] of files) {
+      const withoutCacheMiddleware = content.replace(
+        /\.concat\(\s*baseApi\.middleware,?\s*\)/g,
+        '',
+      );
+
+      expect(/\.concat\(|enhancers:/.test(withoutCacheMiddleware), path).toBe(false);
+
+      if (!path.endsWith('/store.ts')) {
+        expect(/middleware:/.test(content), path).toBe(false);
+      }
     }
   });
 

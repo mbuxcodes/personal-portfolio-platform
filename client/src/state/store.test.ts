@@ -19,12 +19,14 @@ afterEach(() => {
 });
 
 describe('store', () => {
-  // When M3.4 adds the server-state cache, this test is the review gate: it must be changed on
-  // purpose, and only for that cache, never for a slice that holds server data.
-  it('contains exactly the four client-only slices', () => {
+  // This test is the review gate for the store's contents. `api` is the RTK Query cache (M3.4),
+  // the only place server data lives. Any other new key is a slice, and a slice that holds server
+  // data breaks the rule in docs/CLIENT_STATE.md.
+  it('contains exactly the four client-only slices and the server-state cache', () => {
     const state = createAppStore().getState();
 
     expect(Object.keys(state).sort()).toEqual([
+      'api',
       'editSnapshot',
       'notifications',
       'session',
@@ -33,12 +35,17 @@ describe('store', () => {
   });
 
   it('starts from the documented initial state', () => {
-    expect(createAppStore().getState()).toEqual({
+    const { api, ...clientState } = createAppStore().getState();
+
+    expect(clientState).toEqual({
       session: { status: 'unknown' },
       notifications: [],
       editSnapshot: null,
       unsavedChanges: false,
     });
+    // A new page load starts with an empty cache: nothing is persisted (BR-006).
+    expect(api.queries).toEqual({});
+    expect(api.mutations).toEqual({});
   });
 
   it('routes each action to its own slice', () => {
@@ -63,7 +70,9 @@ describe('store', () => {
     store.dispatch(unsavedChangesMarked());
     store.dispatch(sessionEnded());
 
-    expect(store.getState()).toEqual({
+    const { session, notifications, editSnapshot, unsavedChanges } = store.getState();
+
+    expect({ session, notifications, editSnapshot, unsavedChanges }).toEqual({
       session: { status: 'signed-out' },
       notifications: [],
       editSnapshot: null,

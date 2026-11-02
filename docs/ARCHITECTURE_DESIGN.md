@@ -240,6 +240,7 @@ flowchart TB
     APP --> RT
     APP --> ST
     APP --> DA
+    ST --> DA
     RT --> LY
     RT --> FT
     LY --> UI
@@ -256,6 +257,7 @@ flowchart TB
 - Dependencies point downward in the diagram. Shared UI never depends on a feature.
 - A feature does not depend on another feature's internals. If two features need the same thing, it moves to Shared UI or Utilities.
 - Only the data-access layer knows the API's addresses and shapes.
+- The store (State) imports Data access only to mount the server-state cache and its middleware (M3.4). Data access never imports State: the store hands it what it needs, such as the action that ends the session, as an argument.
 
 ### 6.2 Feature-based organization
 
