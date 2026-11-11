@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import type { RouteObject } from 'react-router';
 import { AdminGuard } from './admin-guard';
+import { SignInLayoutRoute } from './layout-routes';
 
 type AdminPages = typeof import('./admin-pages');
 
@@ -13,14 +14,19 @@ function adminPage(pick: (pages: AdminPages) => ComponentType) {
 }
 
 /**
- * The admin routes. Sign-in is open. Every other page sits behind the guard.
- * Unknown addresses under `/admin` fall through to the not-found route.
+ * The admin routes. Sign-in is open and sits in the sign-in layout. Every other page sits behind
+ * the guard, which also supplies the admin layout. Unknown addresses under `/admin` fall through
+ * to the not-found route.
  */
 export const adminRoutes: RouteObject[] = [
   {
     path: ADMIN_BASE_PATH,
     children: [
-      { path: 'sign-in', lazy: adminPage((pages) => pages.SignInPage) },
+      {
+        path: 'sign-in',
+        Component: SignInLayoutRoute,
+        children: [{ index: true, lazy: adminPage((pages) => pages.SignInPage) }],
+      },
       {
         Component: AdminGuard,
         children: [

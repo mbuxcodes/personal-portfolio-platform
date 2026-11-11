@@ -1,5 +1,5 @@
 /** The owner's name, shown at the end of every page title. */
-const SITE_NAME = 'Muhammad Bux Brohi';
+export const SITE_NAME = 'Muhammad Bux Brohi';
 
 /** The title of the Home page. It matches the title in `index.html`. */
 const DEFAULT_PAGE_TITLE = `${SITE_NAME} | Full Stack Developer`;
